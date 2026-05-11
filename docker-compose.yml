@@ -1,0 +1,53 @@
+services:
+
+  # ── Database ───────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:17-alpine
+    container_name: slit-db
+    environment:
+      POSTGRES_DB:       slit
+      POSTGRES_USER:     slit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # Tune Postgres to stay within ~200MB on the e2-micro
+    command: >
+      postgres
+      -c shared_buffers=128MB
+      -c max_connections=20
+      -c work_mem=4MB
+      -c maintenance_work_mem=32MB
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U slit -d slit"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Application ───────────────────────────────────────────────────────────
+  app:
+    build: .
+    container_name: slit-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL:      jdbc:postgresql://postgres:5432/slit
+      SPRING_DATASOURCE_USERNAME: slit
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_PROFILES_ACTIVE:     docker
+      JWT_SECRET:                 ${JWT_SECRET}
+      JWT_EXPIRATION_MS:          86400000
+      SPRING_APPLICATION_NAME:    slit-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  pgdata:
