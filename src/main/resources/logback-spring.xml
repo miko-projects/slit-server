@@ -4,11 +4,11 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="appName" source="spring.application.name"/>
 
-    <!-- ── Default (IntelliJ / bare JVM) ─────────────────────────────────── -->
+    <!-- ── Local dev ─────────────────────────────────────────────────────────── -->
     <springProfile name="!docker &amp; !prod">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
-                <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%cyan(${appName})] [trace=%mdc{traceId:-none}] %logger{36} - %msg%n</pattern>
+                <pattern>%d{HH:mm:ss.SSS} %highlight(%-5level) [%cyan(${appName})] %logger{36} - %msg%n</pattern>
             </encoder>
         </appender>
         <root level="INFO">
@@ -16,36 +16,20 @@
         </root>
     </springProfile>
 
-    <!-- ── Docker (local dev) ─────────────────────────────────────────────── -->
-    <!-- JSON so Promtail can index traceId and level as Loki labels          -->
-    <springProfile name="docker">
-        <appender name="CONSOLE_JSON" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                <customFields>{"app":"${appName}"}</customFields>
-                <includeMdcKeyName>traceId</includeMdcKeyName>
-                <includeMdcKeyName>spanId</includeMdcKeyName>
+    <!-- ── Docker / Production ───────────────────────────────────────────────── -->
+    <!-- Plain text to stdout — Cloud Logging Ops Agent picks this up            -->
+    <springProfile name="docker | prod">
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [${appName}] %logger{36} - %msg%n</pattern>
             </encoder>
         </appender>
         <root level="INFO">
-            <appender-ref ref="CONSOLE_JSON"/>
-        </root>
-    </springProfile>
-
-    <!-- ── Production (Cloud Run) ─────────────────────────────────────────── -->
-    <!-- JSON understood by Google Cloud Logging structured log viewer        -->
-    <springProfile name="prod">
-        <appender name="CONSOLE_JSON_PROD" class="ch.qos.logback.core.ConsoleAppender">
-            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-                <customFields>{"app":"${appName}"}</customFields>
-                <includeMdcKeyName>traceId</includeMdcKeyName>
-                <includeMdcKeyName>spanId</includeMdcKeyName>
-            </encoder>
-        </appender>
-        <root level="WARN">
-            <appender-ref ref="CONSOLE_JSON_PROD"/>
+            <appender-ref ref="CONSOLE"/>
         </root>
         <logger name="slit.slitserver" level="INFO"/>
         <logger name="org.flywaydb"    level="INFO"/>
+        <logger name="org.hibernate"   level="WARN"/>
     </springProfile>
 
 </configuration>
