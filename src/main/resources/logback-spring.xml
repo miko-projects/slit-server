@@ -18,7 +18,7 @@
 
     <!-- ── Docker / Production ───────────────────────────────────────────────── -->
     <!-- Plain text to stdout — Cloud Logging Ops Agent picks this up            -->
-    <springProfile name="docker | prod">
+    <springProfile name="docker, prod">
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
                 <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [${appName}] %logger{36} - %msg%n</pattern>
