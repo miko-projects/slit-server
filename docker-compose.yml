@@ -26,7 +26,7 @@ services:
 
   # ── Application ───────────────────────────────────────────────────────────
   app:
-    build: .
+    image: ghcr.io/miko-projects/slit-server:latest
     container_name: slit-app
     ports:
       - "8080:8080"
