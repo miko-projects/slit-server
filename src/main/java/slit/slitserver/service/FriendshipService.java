@@ -25,6 +25,7 @@ public class FriendshipService {
 
     // ── Queries ──────────────────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public List<FriendResponse> listFriends(UUID currentUserId) {
         return friendshipRepository.findAcceptedByUserId(currentUserId)
                 .stream()
@@ -32,6 +33,7 @@ public class FriendshipService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<FriendResponse> listPending(UUID currentUserId) {
         List<FriendResponse> result = new ArrayList<>();
         friendshipRepository.findPendingIncoming(currentUserId)
