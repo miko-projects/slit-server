@@ -104,6 +104,7 @@ jobs:
           key:      ${{ secrets.VM_SSH_KEY }}
           command_timeout: 5m
           script: |
+            echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull ghcr.io/${{ github.repository }}:latest
             cd ~/slit-server
             docker compose up -d

@@ -39,9 +39,9 @@ public class GroupController {
 
     @PostMapping("/{id}/members")
     public GroupResponse addMember(@PathVariable UUID id,
-                                   @RequestParam String email,
+                                   @RequestParam UUID userId,
                                    @AuthenticationPrincipal UserDetails principal) {
-        return groupService.addMember(id, uid(principal), email);
+        return groupService.addMember(id, uid(principal), userId);
     }
 
     @DeleteMapping("/{id}/members/{memberId}")

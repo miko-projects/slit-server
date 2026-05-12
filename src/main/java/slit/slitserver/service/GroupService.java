@@ -62,10 +62,10 @@ public class GroupService {
     }
 
     @Transactional
-    public GroupResponse addMember(UUID groupId, UUID requestingUserId, String memberEmail) {
+    public GroupResponse addMember(UUID groupId, UUID requestingUserId, UUID newUserId) {
         SlitGroup group = findMemberGroup(groupId, requestingUserId);
-        User newUser = userRepository.findByEmail(memberEmail)
-                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found: " + memberEmail));
+        User newUser = userRepository.findById(newUserId)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));
 
         if (groupMemberRepository.existsByGroupIdAndUserId(groupId, newUser.getId())) {
             throw new ApiException(HttpStatus.CONFLICT, "User is already a member");
