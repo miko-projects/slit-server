@@ -2,6 +2,7 @@ package slit.slitserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
@@ -35,8 +36,10 @@ public class Receipt {
     private String saveTarget = "personal";
     @Column(name = "scan_quality", nullable = false)
     private String scanQuality = "clear";
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
+    @Builder.Default
     @OneToMany(mappedBy = "receipt", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
     private List<ReceiptItem> items = new ArrayList<>();
