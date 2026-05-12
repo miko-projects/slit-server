@@ -2,6 +2,7 @@ package slit.slitserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,9 +25,9 @@ public class User {
     private String tag;
     @Column(name = "scan_credits", nullable = false)
     private int scanCredits = 5;
-    @Builder.Default
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt = Instant.now();
+    private Instant createdAt;
 
     /** Full unique handle shown to other users, e.g. "mikos#A3F2" */
     public String getHandle() {
