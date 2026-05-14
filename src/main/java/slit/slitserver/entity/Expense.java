@@ -2,6 +2,7 @@ package slit.slitserver.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.*;
@@ -22,8 +23,11 @@ public class Expense {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payer_id", nullable = false)
     private User payer;
+    @Column(nullable = false, length = 3) private String currency = "USD";
     @Column(name = "split_type", nullable = false) private String splitType = "equal";
-    @Column(name = "created_at", nullable = false, updatable = false) private Instant createdAt = Instant.now();
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false) private Instant createdAt;
+    @Builder.Default
     @OneToMany(mappedBy = "expense", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpenseSplit> splits = new ArrayList<>();
 }

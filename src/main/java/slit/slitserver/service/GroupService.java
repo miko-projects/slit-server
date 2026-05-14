@@ -47,6 +47,7 @@ public class GroupService {
                 .name(req.name())
                 .kind(req.kind())
                 .destination(req.destination())
+                .currency(req.currency() != null ? req.currency().toUpperCase() : "USD")
                 .createdBy(creator)
                 .build();
         groupRepository.save(group);
@@ -120,6 +121,6 @@ public class GroupService {
                         gm.getUser().getEmail()))
                 .toList();
         return new GroupResponse(g.getId(), g.getName(), g.getKind(),
-                g.getDestination(), g.getCreatedAt(), members);
+                g.getDestination(), g.getCurrency(), g.getCreatedAt(), members);
     }
 }

@@ -16,6 +16,8 @@ public class SlitGroup {
     @Column(nullable = false)
     private String kind;
     private String destination;
+    @Column(nullable = false, length = 3)
+    private String currency = "USD";
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by_id")
     private User createdBy;

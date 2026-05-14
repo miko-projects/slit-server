@@ -36,7 +36,7 @@ public class AuthService {
                 .displayName(req.displayName())
                 .username(req.username())
                 .tag(tag)
-                .scanCredits(5)
+                .scanCredits(3)
                 .build();
         userRepository.save(user);
         String token = jwtUtil.generate(user.getId(), user.getEmail());

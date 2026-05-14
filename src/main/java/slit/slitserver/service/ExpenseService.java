@@ -47,11 +47,16 @@ public class ExpenseService {
                     .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Receipt not found"));
         }
 
+        String currency = (req.currency() != null && !req.currency().isBlank())
+                ? req.currency().toUpperCase()
+                : group.getCurrency();
+
         Expense expense = new Expense();
         expense.setGroup(group);
         expense.setReceipt(receipt);
         expense.setTitle(req.title());
         expense.setAmount(req.amount());
+        expense.setCurrency(currency);
         expense.setPayer(payer);
         expense.setSplitType(req.splitType() != null ? req.splitType() : "equal");
 
@@ -117,7 +122,7 @@ public class ExpenseService {
                 e.getId(),
                 e.getGroup().getId(),
                 e.getReceipt() != null ? e.getReceipt().getId() : null,
-                e.getTitle(), e.getAmount(),
+                e.getTitle(), e.getAmount(), e.getCurrency(),
                 e.getPayer().getId(), e.getPayer().getDisplayName(),
                 e.getSplitType(), e.getCreatedAt(), splits);
     }

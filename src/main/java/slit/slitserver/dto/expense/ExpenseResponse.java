@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.*;
 public record ExpenseResponse(
     UUID id, UUID groupId, UUID receiptId,
-    String title, BigDecimal amount,
+    String title, BigDecimal amount, String currency,
     UUID payerId, String payerName,
     String splitType, Instant createdAt,
     List<SplitResponse> splits

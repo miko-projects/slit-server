@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false, length = 4)
     private String tag;
     @Column(name = "scan_credits", nullable = false)
-    private int scanCredits = 5;
+    private int scanCredits = 3;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;

@@ -13,6 +13,7 @@ public record ExpenseRequest(
         @NotNull @Positive BigDecimal amount,
         @NotNull UUID payerId,
         String splitType,
+        String currency,          // ISO-4217, defaults to group currency if null
         UUID receiptId,
         List<ExpenseSplitRequest> splits
 ) {

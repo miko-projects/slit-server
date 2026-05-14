@@ -12,7 +12,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Map<String, String>> handleApi(ApiException ex) {
         return ResponseEntity.status(ex.getStatus())
-                .body(Map.of("error", ex.getMessage()));
+                .body(Map.of("message", ex.getMessage(), "error", ex.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
