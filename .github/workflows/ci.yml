@@ -104,8 +104,20 @@ jobs:
           key:      ${{ secrets.VM_SSH_KEY }}
           command_timeout: 5m
           script: |
+            # Write all secrets to .env (recreate on every deploy)
+            cat > ~/slit-server/.env << 'EOF'
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            EXCHANGE_API_KEY=${{ secrets.EXCHANGE_API_KEY }}
+            ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }}
+            EOF
+
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             docker pull ghcr.io/${{ github.repository }}:latest
+
             cd ~/slit-server
-            docker compose up -d
+            docker compose up -d --remove-orphans
+
+            docker image prune -f
+
             echo "Deploy complete"

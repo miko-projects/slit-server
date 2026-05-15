@@ -38,6 +38,8 @@ services:
       JWT_SECRET:                 ${JWT_SECRET}
       JWT_EXPIRATION_MS:          86400000
       SPRING_APPLICATION_NAME:    slit-app
+      EXCHANGE_API_KEY: ${EXCHANGE_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
     depends_on:
       postgres:
         condition: service_healthy
